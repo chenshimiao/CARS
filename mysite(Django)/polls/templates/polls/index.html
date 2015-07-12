@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>{{title_web}}</title>
+<style type="text/css">
+		.changeState {			
+		}
+		.all {
+			display:none;
+		}
+</style>
+    <script type="text/javascript">
+		function changeValue() {
+			var obj = document.getElementById("currentSelect");
+			var index = obj.selectedIndex;
+			var firstNodeText = obj.options[index].text;
+			var val = obj.options[index].value - 1;			
+			var myClass = "test_" + val;
+			var elements = document.getElementsByClassName(myClass);
+			var allEle = document.getElementsByTagName("tr");
+			if (firstNodeText == "全部") {
+				for (var t = 1; t <= allEle.length; t++){
+					allEle[t].className = allEle[t].className.replace(" all", "");
+					allEle[t].className = allEle[t].className.replace(" changeState", "");
+				}
+				return;
+			}
+			for (var j = 1; j <= allEle.length; j++){				
+				if (allEle[j].className.indexOf(myClass + " ") === -1) {
+					allEle[j].className = allEle[j].className.replace(" all", "");
+					allEle[j].className = allEle[j].className.replace(" changeState", "");
+					allEle[j].className += " all";
+				} 
+				else {
+					allEle[j].className = allEle[j].className.replace(" changeState", "");
+					allEle[j].className = allEle[j].className.replace(" all", "");
+					allEle[j].className =myClass + " changeState";					
+				}
+			}			
+		}
+		function getSelect() {
+			var obj = document.getElementById("gearbox");
+			var index = obj.selectedIndex;
+			var text = obj.options[index].text;
+			var allEle = document.getElementsByTagName("tr");
+			if (text == "全部") {
+				for (var i = 1; i <= allEle.length; i++){
+					allEle[i].className = allEle[i].className.replace(" changeState", "");
+					allEle[i].className = allEle[i].className.replace(" all", "");
+				}
+				return;
+			}
+			for (var j = 1; j <= allEle.length; j++){
+				var itemText = allEle[j].getElementsByTagName("td")[6].innerText;
+				if (text == itemText) {
+					allEle[j].className = allEle[j].className.replace(" changeState", "");
+					allEle[j].className = allEle[j].className.replace(" all", "");
+					allEle[j].className += " changeState";	
+				}
+				else {
+					allEle[j].className = allEle[j].className.replace(" all", "");
+					allEle[j].className = allEle[j].className.replace(" changeState", "");
+					allEle[j].className += " all";
+				}
+			}
+		}
+    </script>
+</head>
+<body>
+<table border="1" align="center">
+<caption><h2>车源信息表</h2></caption>
+
+    <tr bgcolor="#80CDDD">
+         <th>level
+           <select name="select" id="currentSelect" onchange="changeValue()" >            
+    {% for level in level_list %}
+             <option value ="{{ forloop.counter }}">{{ level }}</option>             
+    {% endfor %}
+           </select>
+         </th>
+         <th>title</th>
+         <th>price</th>
+         <th>distance</th>
+         <th>time</th>
+         <th>city</th>
+         <th>gearbox
+           <select name="select" id="gearbox" onchange="getSelect()">            
+    {% for gearbox in gearbox_list %}
+             <option value ="{{ forloop.counter }}">{{ gearbox }}</option>             
+    {% endfor %}
+           </select>
+         </th>
+     </tr>
+{% if cars_list %}
+<ul>
+    {% for tutorialitem in cars_list %}
+</ul>
+     <tr class="test_{{tutorialitem.level}} ">
+         <td cellpadding:"30" align="center">{{tutorialitem.level}}</td>
+         <td width:"30" align="left">{{tutorialitem.title}}</td>
+         <td align="center">{{tutorialitem.price}}</td>
+         <td align="center">{{tutorialitem.distance}}</td>
+         <td>{{tutorialitem.time}}</td>
+         <td align="center">{{tutorialitem.city}}</td>
+         <td align="center">{{tutorialitem.gearbox}}</td>
+      </tr>
+<ul>
+{% endfor %}
+</ul>
+{% else %}
+<p>No polls are available.</p>
+{% endif %}
+</body>
+</html>
